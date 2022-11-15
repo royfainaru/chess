@@ -1,12 +1,12 @@
 abstract class Piece {
 	int value;
 	int color;
-
+	
 	public Piece(int val, int color) {
 		this.value = val;
 		this.color = color;
 	}
-
+	
 	public void printPiece() {
 		System.out.print("[" + Integer.toString(this.value) + " " + Integer.toString(this.color) + "]");
 	}
@@ -18,12 +18,52 @@ class Pawn extends Piece {
 		super(1, color);
 	}
 
+	private boolean isInitial(int i) {
+		return i == this.color % 7;
+	}
+	
+	private int legalMoveIDir() {
+		return this.color;
+	}
+	
+	private static int calcIDir(int i1,int i2) {
+		return (i2 - i1) / (Math.abs(i2 - i1));
+	}
+	
+	private static int calcJDir(int j1, int j2) {
+		return (j2 - j1) / (Math.abs(j2 - j1));
+	}
+	
+	public boolean isLegalMove(int i1, int j1, int i2, int j2) {
+		int iInc = i2 - i1;
+		int jInc = j2 - j1;
+		
+		//replace with case switch
+		if(jInc != 0) {
+			return false;
+		}
+		if(calcIDir(i1, i2) != this.legalMoveIDir()) {
+			return false;
+		}
+		return true;
+	}
+	
+	static boolean isLegalCapture(int i1, int i2, int j1, int j2) {
+		return true;
+	}
 }
 
 class King extends Piece {
 
 	King(int color) {
 		super(10, color);
+	}
+	
+	public static boolean isLegalMove(int i1, int j1, int i2, int j2) {
+		return Math.abs(i2 - i1) < 2 && 
+				Math.abs(j2 - j1) < 2 && 
+				i2 > 0 && i2 < 8 && 
+				j2 > 0 && j2 < 8;
 	}
 }
 
